@@ -82,7 +82,11 @@ rl.on('close', async () => {
     }
   };
 
-  const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-  fs.writeFileSync(path.join(__dirname, 'depth_chart.png'), imageBuffer);
-  console.log('Depth chart has been generated.');
+  try {
+    const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+    fs.writeFileSync(path.join(__dirname, 'depth_chart.png'), imageBuffer);
+    console.log('Depth chart has been generated.');
+  } catch (error) {
+    console.error('Error generating depth chart:', error);
+  }
 });

@@ -53,7 +53,7 @@ const height = 600; // Height of the chart in pixels
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
 
 const configuration: ChartConfiguration<'line'> = {
-  type: 'line' as ChartType,
+  type: 'line',
   data: {
     labels: prices,
     datasets: [{
@@ -87,4 +87,3 @@ const configuration: ChartConfiguration<'line'> = {
   const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
   fs.writeFileSync(path.join(__dirname, 'depth_chart.png'), imageBuffer);
   console.log('Depth chart has been generated.');
-})();

@@ -1,90 +1,65 @@
 import * as fs from 'fs';
-import * as path from 'path';
-import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
-import { ChartConfiguration, ChartType } from 'chart.js';
 
-// Define types for orders
-interface Order {
-  bottomRangeLow: number;
-  bottomRangeHigh: number;
-  topRangeLow: number;
-  topRangeHigh: number;
+interface OrderRange {
+  bottomRange: {
+    low: number;
+    high: number;
+  };
+  topRange: {
+    low: number;
+    high: number;
+  };
   tokens: number;
 }
 
-// Read and parse the CSV file
-const csvFilePath = path.join(__dirname, 'orders.csv');
-const csvData = fs.readFileSync(csvFilePath, 'utf8');
+function generateRecurringOrders(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): OrderRange[] {
+  const orders: OrderRange[] = [];
+  const tokensPerOrder = totalTokens / numOrders;
 
-const lines = csvData.trim().split('\n');
-const headers = lines.shift()?.split(',');
+  function createOrderRanges(low: number, high: number, remainingOrders: number): void {
+    if (remainingOrders === 0) return;
 
-if (!headers) {
-  throw new Error('CSV file is missing headers');
+    const mid = (low + high) / 2;
+
+    // Create the order for the current range
+    orders.push({
+      bottomRange: {
+        low: parseFloat(low.toFixed(10)),
+        high: parseFloat(mid.toFixed(10)),
+      },
+      topRange: {
+        low: parseFloat(mid.toFixed(10)),
+        high: parseFloat(high.toFixed(10)),
+      },
+      tokens: tokensPerOrder,
+    });
+
+    // Recursively create further orders if there are orders left
+    createOrderRanges(low, mid, remainingOrders - 1);
+    createOrderRanges(mid, high, remainingOrders - 1);
+  }
+
+  createOrderRanges(startPrice, endPrice, numOrders);
+
+  // Ensure we only return the requested number of orders
+  return orders.slice(0, numOrders);
 }
 
-// Parse the CSV data into an array of objects
-const orders: Order[] = lines.map((line: string): Order => {
-  const values = line.split(',').map((value: string) => parseFloat(value));
-  return {
-    bottomRangeLow: values[0],
-    bottomRangeHigh: values[1],
-    topRangeLow: values[2],
-    topRangeHigh: values[3],
-    tokens: values[4]
-  };
-});
+// Example usage
+const startPrice = 0.0000000069;
+const endPrice = 0.000000042;
+const totalTokens = 1000000000; // 1 billion tokens
+const numOrders = 50;
+const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
 
-// Prepare data for the depth chart
-const prices: number[] = [];
-const tokens: number[] = [];
-let cumulativeTokens = 0;
+// Generate CSV content
+const csvContent = orders.map(order => {
+  return `${order.bottomRange.low.toFixed(10)},${order.bottomRange.high.toFixed(10)},${order.topRange.low.toFixed(10)},${order.topRange.high.toFixed(10)},${order.tokens}`;
+}).join('\n');
 
-orders.forEach((order: Order) => {
-  const midPrice = (order.bottomRangeLow + order.topRangeHigh) / 2;
-  cumulativeTokens += order.tokens;
-  prices.push(midPrice);
-  tokens.push(cumulativeTokens);
-});
+const header = "Bottom Range Low,Bottom Range High,Top Range Low,Top Range High,Tokens\n";
+const csv = header + csvContent;
 
-// Generate the depth chart
-const width = 800; // Width of the chart in pixels
-const height = 600; // Height of the chart in pixels
-const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
+fs.writeFileSync('src/orders.csv', csv);
 
-const configuration: ChartConfiguration<'line'> = {
-  type: 'line' as ChartType,
-  data: {
-    labels: prices,
-    datasets: [{
-      label: 'Tokens for Sale',
-      data: tokens,
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1,
-      fill: false
-    }]
-  },
-  options: {
-    scales: {
-      x: {
-        type: 'linear',
-        title: {
-          display: true,
-          text: 'Price (WETH)'
-        }
-      },
-      y: {
-        title: {
-          display: true,
-          text: 'Tokens for Sale'
-        }
-      }
-    }
-  }
-};
-
-(async () => {
-  const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-  fs.writeFileSync(path.join(__dirname, 'depth_chart.png'), imageBuffer);
-  console.log('Depth chart has been generated.');
-})();
+console.log('Orders CSV file has been generated.');

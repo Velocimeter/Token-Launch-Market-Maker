@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "generate-all": "ts-node --project tsconfig.json src/generateOrders.ts && ts-node --project tsconfig.json src/generateDepthChart.ts"
+    "generate-all": "node --max-old-space-size=8192 -r ts-node/register src/generateOrders.ts && node --max-old-space-size=8192 -r ts-node/register src/generateDepthChart.ts"
   },
   "keywords": [],
   "author": "",

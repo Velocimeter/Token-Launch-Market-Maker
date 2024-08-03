@@ -55,7 +55,8 @@ const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrd
 
 // Generate CSV content
 const csvContent = orders.map(order => {
-  return `${order.bottomRange.low},${order.bottomRange.high},${order.topRange.low},${order.topRange.high},${order.tokens}`;
+  // Format numbers to fixed-point notation to avoid scientific notation
+  return `${order.bottomRange.low.toFixed(10)},${order.bottomRange.high.toFixed(10)},${order.topRange.low.toFixed(10)},${order.topRange.high.toFixed(10)},${order.tokens}`;
 }).join('\n');
 
 const header = "Bottom Range Low,Bottom Range High,Top Range Low,Top Range High,Tokens\n";

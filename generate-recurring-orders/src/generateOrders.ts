@@ -23,6 +23,9 @@ function generateOrdersForRange(startPrice: number, endPrice: number, totalToken
 
     const mid = (high + low) / 2;
 
+    // Debugging prints
+    console.log(`low: ${low}, mid: ${mid}, high: ${high}, depth: ${depth}`);
+
     const wethForThisRange = tokensPerOrder * mid;
     accumulatedWETH += wethForThisRange;
 
@@ -68,7 +71,7 @@ const floorEndPrice = 0.0000000042;
 const discoveryStartPrice = 0.0000000042;
 const discoveryEndPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
-const levels = 5;
+const levels = 2;
 const orders = generateRecurringOrders(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
 
 // Generate CSV content

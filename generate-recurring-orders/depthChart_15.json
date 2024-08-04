@@ -1,0 +1,312 @@
+[
+  {
+    "price": 1.6e-9,
+    "tokens": 6250000,
+    "wethAvailable": 0.01528125
+  },
+  {
+    "price": 1.1e-9,
+    "tokens": 12500000,
+    "wethAvailable": 0.025078125
+  },
+  {
+    "price": 9e-10,
+    "tokens": 18750000,
+    "wethAvailable": 0.0321328125
+  },
+  {
+    "price": 8e-10,
+    "tokens": 25000000,
+    "wethAvailable": 0.0378164062
+  },
+  {
+    "price": 7e-10,
+    "tokens": 31250000,
+    "wethAvailable": 0.0428144531
+  },
+  {
+    "price": 1e-9,
+    "tokens": 37500000,
+    "wethAvailable": 0.0491835937
+  },
+  {
+    "price": 1.2e-9,
+    "tokens": 43750000,
+    "wethAvailable": 0.057609375
+  },
+  {
+    "price": 1.1e-9,
+    "tokens": 50000000,
+    "wethAvailable": 0.0653496094
+  },
+  {
+    "price": 1.4e-9,
+    "tokens": 56250000,
+    "wethAvailable": 0.0744609375
+  },
+  {
+    "price": 1.8e-9,
+    "tokens": 62500000,
+    "wethAvailable": 0.087
+  },
+  {
+    "price": 1.7e-9,
+    "tokens": 68750000,
+    "wethAvailable": 0.0981679688
+  },
+  {
+    "price": 1.6e-9,
+    "tokens": 75000000,
+    "wethAvailable": 0.1086503906
+  },
+  {
+    "price": 1.9e-9,
+    "tokens": 81250000,
+    "wethAvailable": 0.1205039063
+  },
+  {
+    "price": 2.1e-9,
+    "tokens": 87500000,
+    "wethAvailable": 0.1344140625
+  },
+  {
+    "price": 2.1e-9,
+    "tokens": 93750000,
+    "wethAvailable": 0.1476386719
+  },
+  {
+    "price": 2.2e-9,
+    "tokens": 100000000,
+    "wethAvailable": 0.162234375
+  },
+  {
+    "price": 2.8e-9,
+    "tokens": 106250000,
+    "wethAvailable": 0.183
+  },
+  {
+    "price": 2.6e-9,
+    "tokens": 112500000,
+    "wethAvailable": 0.2010234375
+  },
+  {
+    "price": 2.6e-9,
+    "tokens": 118750000,
+    "wethAvailable": 0.2176757812
+  },
+  {
+    "price": 2.5e-9,
+    "tokens": 125000000,
+    "wethAvailable": 0.2336425781
+  },
+  {
+    "price": 2.7e-9,
+    "tokens": 131250000,
+    "wethAvailable": 0.2509804687
+  },
+  {
+    "price": 3e-9,
+    "tokens": 137500000,
+    "wethAvailable": 0.270375
+  },
+  {
+    "price": 2.9e-9,
+    "tokens": 143750000,
+    "wethAvailable": 0.2890839844
+  },
+  {
+    "price": 3.2e-9,
+    "tokens": 150000000,
+    "wethAvailable": 0.3091640625
+  },
+  {
+    "price": 3.6e-9,
+    "tokens": 156250000,
+    "wethAvailable": 0.332671875
+  },
+  {
+    "price": 3.4e-9,
+    "tokens": 162500000,
+    "wethAvailable": 0.3548085938
+  },
+  {
+    "price": 3.4e-9,
+    "tokens": 168750000,
+    "wethAvailable": 0.3762597656
+  },
+  {
+    "price": 3.6e-9,
+    "tokens": 175000000,
+    "wethAvailable": 0.3990820313
+  },
+  {
+    "price": 3.9e-9,
+    "tokens": 181250000,
+    "wethAvailable": 0.4239609375
+  },
+  {
+    "price": 3.8e-9,
+    "tokens": 187500000,
+    "wethAvailable": 0.4481542969
+  },
+  {
+    "price": 4e-9,
+    "tokens": 193750000,
+    "wethAvailable": 0.47371875
+  },
+  {
+    "price": 2.04e-8,
+    "tokens": 218750000,
+    "wethAvailable": 0.915
+  },
+  {
+    "price": 1.23e-8,
+    "tokens": 243750000,
+    "wethAvailable": 1.425
+  },
+  {
+    "price": 8.2e-9,
+    "tokens": 268750000,
+    "wethAvailable": 1.7325
+  },
+  {
+    "price": 6.2e-9,
+    "tokens": 293750000,
+    "wethAvailable": 1.93875
+  },
+  {
+    "price": 5.2e-9,
+    "tokens": 318750000,
+    "wethAvailable": 2.094375
+  },
+  {
+    "price": 9.3e-9,
+    "tokens": 343750000,
+    "wethAvailable": 2.35125
+  },
+  {
+    "price": 1.43e-8,
+    "tokens": 368750000,
+    "wethAvailable": 2.76
+  },
+  {
+    "price": 1.33e-8,
+    "tokens": 393750000,
+    "wethAvailable": 3.118125
+  },
+  {
+    "price": 1.73e-8,
+    "tokens": 418750000,
+    "wethAvailable": 3.5775
+  },
+  {
+    "price": 2.45e-8,
+    "tokens": 443750000,
+    "wethAvailable": 4.29
+  },
+  {
+    "price": 2.24e-8,
+    "tokens": 468750000,
+    "wethAvailable": 4.90125
+  },
+  {
+    "price": 2.14e-8,
+    "tokens": 493750000,
+    "wethAvailable": 5.461875
+  },
+  {
+    "price": 2.54e-8,
+    "tokens": 518750000,
+    "wethAvailable": 6.12375
+  },
+  {
+    "price": 3.05e-8,
+    "tokens": 543750000,
+    "wethAvailable": 6.9375
+  },
+  {
+    "price": 2.95e-8,
+    "tokens": 568750000,
+    "wethAvailable": 7.700625
+  },
+  {
+    "price": 3.35e-8,
+    "tokens": 593750000,
+    "wethAvailable": 8.565
+  },
+  {
+    "price": 4.47e-8,
+    "tokens": 618750000,
+    "wethAvailable": 9.885
+  },
+  {
+    "price": 4.06e-8,
+    "tokens": 643750000,
+    "wethAvailable": 11.0025
+  },
+  {
+    "price": 3.86e-8,
+    "tokens": 668750000,
+    "wethAvailable": 12.01875
+  },
+  {
+    "price": 3.76e-8,
+    "tokens": 693750000,
+    "wethAvailable": 12.984375
+  },
+  {
+    "price": 4.16e-8,
+    "tokens": 718750000,
+    "wethAvailable": 14.05125
+  },
+  {
+    "price": 4.67e-8,
+    "tokens": 743750000,
+    "wethAvailable": 15.27
+  },
+  {
+    "price": 4.57e-8,
+    "tokens": 768750000,
+    "wethAvailable": 16.438125
+  },
+  {
+    "price": 4.97e-8,
+    "tokens": 793750000,
+    "wethAvailable": 17.7075
+  },
+  {
+    "price": 5.68e-8,
+    "tokens": 818750000,
+    "wethAvailable": 19.23
+  },
+  {
+    "price": 5.48e-8,
+    "tokens": 843750000,
+    "wethAvailable": 20.65125
+  },
+  {
+    "price": 5.38e-8,
+    "tokens": 868750000,
+    "wethAvailable": 22.021875
+  },
+  {
+    "price": 5.78e-8,
+    "tokens": 893750000,
+    "wethAvailable": 23.49375
+  },
+  {
+    "price": 6.29e-8,
+    "tokens": 918750000,
+    "wethAvailable": 25.1175
+  },
+  {
+    "price": 6.19e-8,
+    "tokens": 943750000,
+    "wethAvailable": 26.690625
+  },
+  {
+    "price": 6.6e-8,
+    "tokens": 968750000,
+    "wethAvailable": 28.365
+  }
+]

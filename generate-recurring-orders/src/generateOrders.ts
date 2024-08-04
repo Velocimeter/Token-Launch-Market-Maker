@@ -51,7 +51,7 @@ export function generateRecurringOrders(startPrice: number, endPrice: number, to
 const startPrice = 0.0000000042;
 const endPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
-const numOrders = 25;
+const numOrders = 50;
 const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
 
 // Generate CSV content

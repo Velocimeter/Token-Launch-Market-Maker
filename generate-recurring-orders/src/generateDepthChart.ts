@@ -13,8 +13,15 @@ interface DepthChartData {
 }
 
 // Function to generate depth chart
-function generateDepthChart(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): DepthChartData[] {
-  const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
+function generateDepthChart(
+  floorStartPrice: number, 
+  floorEndPrice: number, 
+  discoveryStartPrice: number, 
+  discoveryEndPrice: number, 
+  totalTokens: number, 
+  levels: number
+): DepthChartData[] {
+  const orders = generateRecurringOrders(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
 
   let accumulatedTokens = 0;
   const depthChart: DepthChartData[] = orders.map(order => {
@@ -44,11 +51,13 @@ function getNextFileNumber(basePath: string, baseName: string): number {
 }
 
 // Example usage
-const startPrice = 0.0000000042;
-const endPrice = 0.000000069;
+const floorStartPrice = 0.00000000069;
+const floorEndPrice = 0.0000000042;
+const discoveryStartPrice = 0.0000000042;
+const discoveryEndPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
-const numOrders = 25;
-const depthChart = generateDepthChart(startPrice, endPrice, totalTokens, numOrders);
+const levels = 5;
+const depthChart = generateDepthChart(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
 
 // Output the depth chart data to JSON with incremented file name
 const basePath = path.resolve(__dirname, '../');

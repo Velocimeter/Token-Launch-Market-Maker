@@ -11,48 +11,65 @@ interface Order {
   wethAvailable: number;
 }
 
-// Function to generate recurring orders based on whitepaper formulas
-export function generateRecurringOrders(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): Order[] {
+// Function to generate recurring orders based on recursive logic
+function generateOrdersForRange(startPrice: number, endPrice: number, totalTokens: number, levels: number): Order[] {
   const orders: Order[] = [];
-  const tokensPerOrder = totalTokens / numOrders;
-  const priceIncrement = (endPrice - startPrice) / numOrders;
+  const tokensPerOrder = totalTokens / Math.pow(2, levels);
 
   let accumulatedWETH = 0;
 
-  // Parameters from the whitepaper
-  const P0 = startPrice;
-  const x0 = totalTokens;
-  const Γ = 1;
+  function createOrderRanges(low: number, high: number, depth: number): void {
+    if (depth === 0) return;
 
-  for (let i = 0; i < numOrders; i++) {
-    const bottomRangeLow = startPrice + (i * priceIncrement);
-    const bottomRangeHigh = bottomRangeLow + priceIncrement;
-    const topRangeLow = bottomRangeHigh;
-    const topRangeHigh = bottomRangeHigh + priceIncrement;
+    const mid = (high + low) / 2;
 
-    // Calculate WETH accumulated for this range
-    const wethForThisRange = tokensPerOrder * bottomRangeHigh;
+    const wethForThisRange = tokensPerOrder * mid;
     accumulatedWETH += wethForThisRange;
 
     orders.push({
-      bottomRangeLow: parseFloat(bottomRangeLow.toFixed(10)),
-      bottomRangeHigh: parseFloat(bottomRangeHigh.toFixed(10)),
-      topRangeLow: parseFloat(topRangeLow.toFixed(10)),
-      topRangeHigh: parseFloat(topRangeHigh.toFixed(10)),
+      bottomRangeLow: parseFloat(low.toFixed(10)),
+      bottomRangeHigh: parseFloat(mid.toFixed(10)),
+      topRangeLow: parseFloat(mid.toFixed(10)),
+      topRangeHigh: parseFloat(high.toFixed(10)),
       tokens: tokensPerOrder,
-      wethAvailable: parseFloat(accumulatedWETH.toFixed(10)), // Store accumulated WETH
+      wethAvailable: parseFloat(accumulatedWETH.toFixed(10)),
     });
+
+    createOrderRanges(low, mid, depth - 1);
+    createOrderRanges(mid, high, depth - 1);
   }
+
+  createOrderRanges(startPrice, endPrice, levels);
 
   return orders;
 }
 
+// Function to generate recurring orders for both ranges
+export function generateRecurringOrders(
+  floorStartPrice: number, 
+  floorEndPrice: number, 
+  discoveryStartPrice: number, 
+  discoveryEndPrice: number, 
+  totalTokens: number, 
+  levels: number
+): Order[] {
+  const floorTokens = totalTokens * 0.2; // 20% of total tokens for floor range
+  const discoveryTokens = totalTokens * 0.8; // 80% of total tokens for discovery range
+
+  const floorOrders = generateOrdersForRange(floorStartPrice, floorEndPrice, floorTokens, levels);
+  const discoveryOrders = generateOrdersForRange(discoveryStartPrice, discoveryEndPrice, discoveryTokens, levels);
+
+  return [...floorOrders, ...discoveryOrders];
+}
+
 // Example usage for testing
-const startPrice = 0.0000000042;
-const endPrice = 0.000000069;
+const floorStartPrice = 0.00000000069;
+const floorEndPrice = 0.0000000042;
+const discoveryStartPrice = 0.0000000042;
+const discoveryEndPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
-const numOrders = 50;
-const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
+const levels = 5;
+const orders = generateRecurringOrders(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
 
 // Generate CSV content
 const csvContent = orders.map(order => {

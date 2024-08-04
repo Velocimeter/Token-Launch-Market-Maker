@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
-import { ChartConfiguration, ChartDataset } from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { generateRecurringOrders } from './generateOrders';
 import 'chartjs-plugin-datalabels';
 
@@ -16,11 +16,15 @@ interface DepthChartData {
 function generateDepthChart(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): DepthChartData[] {
   const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
 
-  const depthChart: DepthChartData[] = orders.map(order => ({
-    price: parseFloat(((order.bottomRangeHigh + order.bottomRangeLow) / 2).toFixed(10)),
-    tokens: parseFloat(order.tokens.toFixed(10)),
-    wethAvailable: parseFloat(order.wethAvailable.toFixed(10)),
-  }));
+  let accumulatedTokens = 0;
+  const depthChart: DepthChartData[] = orders.map(order => {
+    accumulatedTokens += order.tokens;
+    return {
+      price: parseFloat(((order.bottomRangeHigh + order.bottomRangeLow) / 2).toFixed(10)),
+      tokens: parseFloat(accumulatedTokens.toFixed(10)),
+      wethAvailable: parseFloat(order.wethAvailable.toFixed(10)),
+    };
+  });
 
   return depthChart;
 }

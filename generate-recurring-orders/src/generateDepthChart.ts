@@ -4,15 +4,6 @@ import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { ChartConfiguration } from 'chart.js';
 import readline from 'readline';
 
-// Define types for orders
-interface Order {
-  bottomRangeLow: number;
-  bottomRangeHigh: number;
-  topRangeLow: number;
-  topRangeHigh: number;
-  tokens: number;
-}
-
 // Prepare data for the depth chart
 const tmpFilePath = path.join(__dirname, 'tmp_data.jsonl'); // Temporary file to store intermediate results
 const tmpFileStream = fs.createWriteStream(tmpFilePath);
@@ -31,15 +22,8 @@ rl.on('line', (line) => {
     return;
   }
   const values = line.split(',').map(value => parseFloat(value));
-  const order: Order = {
-    bottomRangeLow: values[0],
-    bottomRangeHigh: values[1],
-    topRangeLow: values[2],
-    topRangeHigh: values[3],
-    tokens: values[4]
-  };
-  const midPrice = (order.bottomRangeLow + order.topRangeHigh) / 2;
-  cumulativeTokens += order.tokens;
+  const midPrice = (values[0] + values[3]) / 2;
+  cumulativeTokens += values[4];
   tmpFileStream.write(JSON.stringify({ price: midPrice, tokens: cumulativeTokens }) + '\n');
 });
 
@@ -100,9 +84,13 @@ rl.on('close', async () => {
     };
 
     try {
+      // Generate a unique filename using a timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const imagePath = path.join(__dirname, `depth_chart_${timestamp}.png`);
+
       const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-      fs.writeFileSync(path.join(__dirname, 'depth_chart.png'), imageBuffer);
-      console.log('Depth chart has been generated.');
+      fs.writeFileSync(imagePath, imageBuffer);
+      console.log(`Depth chart has been generated: ${imagePath}`);
     } catch (error) {
       console.error('Error generating depth chart:', error);
     } finally {

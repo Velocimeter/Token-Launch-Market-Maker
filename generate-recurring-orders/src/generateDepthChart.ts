@@ -12,7 +12,7 @@ interface DepthChartData {
   wethAvailable: number;
 }
 
-// Function to generate depth chart
+// Function to generate depth chart data
 function generateDepthChart(
   floorStartPrice: number, 
   floorEndPrice: number, 
@@ -33,7 +33,8 @@ function generateDepthChart(
     };
   });
 
-  return depthChart;
+  // Ensure data is sorted by price
+  return depthChart.sort((a, b) => a.price - b.price);
 }
 
 // Function to get the next file number
@@ -102,6 +103,12 @@ const configuration: ChartConfiguration<'line'> = {
   },
   options: {
     scales: {
+      x: {
+        type: 'linear',
+        position: 'bottom',
+        min: floorStartPrice,
+        max: discoveryEndPrice,
+      },
       'y-axis-1': {
         type: 'linear',
         position: 'left',

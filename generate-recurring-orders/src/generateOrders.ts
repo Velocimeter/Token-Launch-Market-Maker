@@ -8,52 +8,66 @@ interface Order {
   topRangeLow: number;
   topRangeHigh: number;
   tokens: number;
+  wethAvailable: number;
 }
 
-// Improved function to generate recurring orders
-function generateRecurringOrders(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): Order[] {
+// Function to generate recurring orders based on whitepaper formulas
+export function generateRecurringOrders(startPrice: number, endPrice: number, totalTokens: number, numOrders: number): Order[] {
   const orders: Order[] = [];
   const tokensPerOrder = totalTokens / numOrders;
+  const priceIncrement = (endPrice - startPrice) / numOrders;
 
-  function createOrderRanges(low: number, high: number, remainingOrders: number): void {
-    if (remainingOrders === 0) return;
+  let accumulatedWETH = 0;
 
-    const mid = (high + low) / 2;
+  // Parameters from the whitepaper
+  const P0 = startPrice;
+  const x0 = totalTokens;
+  const Γ = 1;
+
+  for (let i = 0; i < numOrders; i++) {
+    const bottomRangeLow = startPrice + (i * priceIncrement);
+    const bottomRangeHigh = bottomRangeLow + priceIncrement;
+    const topRangeLow = bottomRangeHigh;
+    const topRangeHigh = bottomRangeHigh + priceIncrement;
+
+    // Calculate WETH accumulated for this range
+    const y0 = x0 * P0 / bottomRangeHigh;
+    const wethForThisRange = tokensPerOrder * bottomRangeHigh;
+    accumulatedWETH += wethForThisRange;
+
+    // Apply the marginal price formula to determine WETH availability
+    const marginalPrice = P0 * Math.pow(x0, 2) / Math.pow((Γ * (bottomRangeHigh - x0) + x0), 2);
+    const wethAvailable = marginalPrice <= bottomRangeHigh ? accumulatedWETH : 0;
 
     orders.push({
-      bottomRangeLow: parseFloat(low.toFixed(10)),
-      bottomRangeHigh: parseFloat(mid.toFixed(10)),
-      topRangeLow: parseFloat(mid.toFixed(10)),
-      topRangeHigh: parseFloat(high.toFixed(10)),
+      bottomRangeLow: parseFloat(bottomRangeLow.toFixed(10)),
+      bottomRangeHigh: parseFloat(bottomRangeHigh.toFixed(10)),
+      topRangeLow: parseFloat(topRangeLow.toFixed(10)),
+      topRangeHigh: parseFloat(topRangeHigh.toFixed(10)),
       tokens: tokensPerOrder,
+      wethAvailable: parseFloat(wethAvailable.toFixed(10)),
     });
-
-    createOrderRanges(low, mid, remainingOrders - 1);
-    createOrderRanges(mid, high, remainingOrders - 1);
   }
 
-  createOrderRanges(startPrice, endPrice, numOrders);
-
-  return orders.slice(0, numOrders);
+  return orders;
 }
 
-// Example usage
+// Example usage for testing
 const startPrice = 0.0000000042;
-  const endPrice = 0.000000069;
+const endPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
 const numOrders = 25;
 const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
 
 // Generate CSV content
 const csvContent = orders.map(order => {
-  return `${order.bottomRangeLow.toFixed(10)},${order.bottomRangeHigh.toFixed(10)},${order.topRangeLow.toFixed(10)},${order.topRangeHigh.toFixed(10)},${order.tokens}`;
+  return `${order.bottomRangeLow.toFixed(10)},${order.bottomRangeHigh.toFixed(10)},${order.topRangeLow.toFixed(10)},${order.topRangeHigh.toFixed(10)},${order.tokens},${order.wethAvailable.toFixed(10)}`;
 }).join('\n');
 
-const header = "Bottom Range Low,Bottom Range High,Top Range Low,Top Range High,Tokens\n";
+const header = "Bottom Range Low,Bottom Range High,Top Range Low,Top Range High,Tokens,WETH Available\n";
 const csv = header + csvContent;
 
-const outputPath = path.join(__dirname, 'orders.csv');
+const outputPath = path.resolve(__dirname, '../orders.csv'); // Adjusted path to save in parent directory
 fs.writeFileSync(outputPath, csv);
 
 console.log(`Orders CSV file has been generated at ${outputPath}`);
-

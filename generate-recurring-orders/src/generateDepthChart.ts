@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
-import { ChartConfiguration } from 'chart.js';
+import { ChartConfiguration, ChartDataset } from 'chart.js';
 import { generateRecurringOrders } from './generateOrders';
+import 'chartjs-plugin-datalabels';
 
 // Define types for depth chart data
 interface DepthChartData {
@@ -70,15 +71,19 @@ const configuration: ChartConfiguration<'line'> = {
         label: 'Tokens Available',
         data: tokensData,
         borderColor: 'rgba(75, 192, 192, 1)',
-        fill: false,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: 'origin',
         yAxisID: 'y-axis-1',
+        stepped: true,
       },
       {
         label: 'WETH Available',
         data: wethData,
         borderColor: 'rgba(255, 99, 132, 1)',
-        fill: false,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        fill: 'origin',
         yAxisID: 'y-axis-2',
+        stepped: true,
       },
     ],
   },
@@ -87,10 +92,35 @@ const configuration: ChartConfiguration<'line'> = {
       'y-axis-1': {
         type: 'linear',
         position: 'left',
+        ticks: {
+          callback: function(tickValue: string | number) {
+            if (typeof tickValue === 'number') {
+              return tickValue.toLocaleString(); // Format numbers with commas
+            }
+            return tickValue;
+          }
+        },
       },
       'y-axis-2': {
         type: 'linear',
         position: 'right',
+        ticks: {
+          callback: function(tickValue: string | number) {
+            if (typeof tickValue === 'number') {
+              return tickValue.toFixed(10); // Ensure WETH values are formatted without scientific notation
+            }
+            return tickValue;
+          }
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      datalabels: {
+        display: false,
       },
     },
   },

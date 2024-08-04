@@ -31,13 +31,8 @@ export function generateRecurringOrders(startPrice: number, endPrice: number, to
     const topRangeHigh = bottomRangeHigh + priceIncrement;
 
     // Calculate WETH accumulated for this range
-    const y0 = x0 * P0 / bottomRangeHigh;
     const wethForThisRange = tokensPerOrder * bottomRangeHigh;
     accumulatedWETH += wethForThisRange;
-
-    // Apply the marginal price formula to determine WETH availability
-    const marginalPrice = P0 * Math.pow(x0, 2) / Math.pow((Γ * (bottomRangeHigh - x0) + x0), 2);
-    const wethAvailable = marginalPrice <= bottomRangeHigh ? accumulatedWETH : 0;
 
     orders.push({
       bottomRangeLow: parseFloat(bottomRangeLow.toFixed(10)),
@@ -45,7 +40,7 @@ export function generateRecurringOrders(startPrice: number, endPrice: number, to
       topRangeLow: parseFloat(topRangeLow.toFixed(10)),
       topRangeHigh: parseFloat(topRangeHigh.toFixed(10)),
       tokens: tokensPerOrder,
-      wethAvailable: parseFloat(wethAvailable.toFixed(10)),
+      wethAvailable: parseFloat(accumulatedWETH.toFixed(10)), // Store accumulated WETH
     });
   }
 

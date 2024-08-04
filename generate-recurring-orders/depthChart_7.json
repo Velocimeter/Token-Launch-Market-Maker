@@ -1,0 +1,127 @@
+[
+  {
+    "price": 5.5e-9,
+    "tokens": 40000000,
+    "wethAvailable": 0.27168
+  },
+  {
+    "price": 8.1e-9,
+    "tokens": 40000000,
+    "wethAvailable": 0.64704
+  },
+  {
+    "price": 1.07e-8,
+    "tokens": 40000000,
+    "wethAvailable": 1.12608
+  },
+  {
+    "price": 1.33e-8,
+    "tokens": 40000000,
+    "wethAvailable": 1.7088
+  },
+  {
+    "price": 1.59e-8,
+    "tokens": 40000000,
+    "wethAvailable": 2.3952
+  },
+  {
+    "price": 1.85e-8,
+    "tokens": 40000000,
+    "wethAvailable": 3.18528
+  },
+  {
+    "price": 2.1e-8,
+    "tokens": 40000000,
+    "wethAvailable": 4.07904
+  },
+  {
+    "price": 2.36e-8,
+    "tokens": 40000000,
+    "wethAvailable": 5.07648
+  },
+  {
+    "price": 2.62e-8,
+    "tokens": 40000000,
+    "wethAvailable": 6.1776
+  },
+  {
+    "price": 2.88e-8,
+    "tokens": 40000000,
+    "wethAvailable": 7.3824
+  },
+  {
+    "price": 3.14e-8,
+    "tokens": 40000000,
+    "wethAvailable": 8.69088
+  },
+  {
+    "price": 3.4e-8,
+    "tokens": 40000000,
+    "wethAvailable": 10.10304
+  },
+  {
+    "price": 3.66e-8,
+    "tokens": 40000000,
+    "wethAvailable": 11.61888
+  },
+  {
+    "price": 3.92e-8,
+    "tokens": 40000000,
+    "wethAvailable": 13.2384
+  },
+  {
+    "price": 4.18e-8,
+    "tokens": 40000000,
+    "wethAvailable": 14.9616
+  },
+  {
+    "price": 4.44e-8,
+    "tokens": 40000000,
+    "wethAvailable": 16.78848
+  },
+  {
+    "price": 4.7e-8,
+    "tokens": 40000000,
+    "wethAvailable": 18.71904
+  },
+  {
+    "price": 4.96e-8,
+    "tokens": 40000000,
+    "wethAvailable": 20.75328
+  },
+  {
+    "price": 5.22e-8,
+    "tokens": 40000000,
+    "wethAvailable": 22.8912
+  },
+  {
+    "price": 5.47e-8,
+    "tokens": 40000000,
+    "wethAvailable": 25.1328
+  },
+  {
+    "price": 5.73e-8,
+    "tokens": 40000000,
+    "wethAvailable": 27.47808
+  },
+  {
+    "price": 5.99e-8,
+    "tokens": 40000000,
+    "wethAvailable": 29.92704
+  },
+  {
+    "price": 6.25e-8,
+    "tokens": 40000000,
+    "wethAvailable": 32.47968
+  },
+  {
+    "price": 6.51e-8,
+    "tokens": 40000000,
+    "wethAvailable": 35.136
+  },
+  {
+    "price": 6.77e-8,
+    "tokens": 40000000,
+    "wethAvailable": 37.896
+  }
+]

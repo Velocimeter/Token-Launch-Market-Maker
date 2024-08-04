@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { ChartConfiguration } from 'chart.js';
-import { generateRecurringOrders } from './generateOrders';
+import { generateRecurringOrders, Order } from './generateOrders';
 import 'chartjs-plugin-datalabels';
 
 // Define types for depth chart data
@@ -24,7 +24,7 @@ function generateDepthChart(
   const orders = generateRecurringOrders(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
 
   let accumulatedTokens = 0;
-  const depthChart: DepthChartData[] = orders.map(order => {
+  const depthChart: DepthChartData[] = orders.map((order: Order) => {
     accumulatedTokens += order.tokens;
     return {
       price: parseFloat(((order.bottomRangeHigh + order.bottomRangeLow) / 2).toFixed(10)),
@@ -59,6 +59,29 @@ const discoveryEndPrice = 0.000000069;
 const totalTokens = 1000000000; // 1 billion tokens
 const levels = 5;
 const depthChart = generateDepthChart(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice, totalTokens, levels);
+
+// Check start and end prices
+const startPriceOnChart = depthChart[0].price;
+const endPriceOnChart = depthChart[depthChart.length - 1].price;
+const lowestPrice = Math.min(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice);
+const highestPrice = Math.max(floorStartPrice, floorEndPrice, discoveryStartPrice, discoveryEndPrice);
+
+console.log(`Expected start price: ${lowestPrice}`);
+console.log(`Actual start price on chart: ${startPriceOnChart}`);
+console.log(`Expected end price: ${highestPrice}`);
+console.log(`Actual end price on chart: ${endPriceOnChart}`);
+
+if (startPriceOnChart !== lowestPrice || endPriceOnChart !== highestPrice) {
+  console.warn(`Start or end price on chart does not match the expected values. Start: ${startPriceOnChart}, End: ${endPriceOnChart}`);
+}
+
+// Ensure tokens are always increasing
+for (let i = 1; i < depthChart.length; i++) {
+  if (depthChart[i].tokens < depthChart[i - 1].tokens) {
+    console.error(`Tokens are not always increasing at index ${i}.`);
+    process.exit(1);
+  }
+}
 
 // Output the depth chart data to JSON with incremented file name
 const basePath = path.resolve(__dirname, '../');
@@ -106,8 +129,13 @@ const configuration: ChartConfiguration<'line'> = {
       x: {
         type: 'linear',
         position: 'bottom',
-        min: floorStartPrice,
-        max: discoveryEndPrice,
+        min: lowestPrice,
+        max: highestPrice,
+        ticks: {
+          callback: function(value: string | number) {
+            return Number(value).toFixed(10); // Format as decimal notation with 10 decimal places
+          }
+        }
       },
       'y-axis-1': {
         type: 'linear',
@@ -152,4 +180,5 @@ const configuration: ChartConfiguration<'line'> = {
   const imageFileName = `depthChart_${fileNumber}.png`;
   fs.writeFileSync(path.join(basePath, imageFileName), image);
   console.log(`Depth chart image has been generated at ${imageFileName}`);
+  console.log(`Files generated: JSON - ${jsonFileName}, Image - ${imageFileName}`);
 })();

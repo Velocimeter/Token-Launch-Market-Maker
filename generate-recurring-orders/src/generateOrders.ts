@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Define types for orders
-interface Order {
+export interface Order {
   bottomRangeLow: number;
   bottomRangeHigh: number;
   topRangeLow: number;

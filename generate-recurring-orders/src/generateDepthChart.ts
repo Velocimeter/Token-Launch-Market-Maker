@@ -1,101 +1,29 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
-import { ChartConfiguration } from 'chart.js';
-import readline from 'readline';
+import { generateRecurringOrders } from './generateOrders';
 
-// Prepare data for the depth chart
-const tmpFilePath = path.join(__dirname, 'tmp_data.jsonl'); // Temporary file to store intermediate results
-const tmpFileStream = fs.createWriteStream(tmpFilePath);
+// Function to generate depth chart
+function generateDepthChart(startPrice: number, endPrice: number, totalTokens: number, numOrders: number) {
+  const orders = generateRecurringOrders(startPrice, endPrice, totalTokens, numOrders);
 
-const rl = readline.createInterface({
-  input: fs.createReadStream(path.join(__dirname, 'orders.csv')),
-  output: process.stdout,
-  terminal: false
-});
+  const depthChart = orders.map(order => ({
+    price: (order.bottomRangeHigh + order.bottomRangeLow) / 2,
+    tokens: order.tokens,
+    wethAvailable: order.wethAvailable,
+  }));
 
-let cumulativeTokens = 0;
+  return depthChart;
+}
 
-rl.on('line', (line) => {
-  if (line.startsWith('Bottom Range Low')) {
-    // Skip the header line
-    return;
-  }
-  const values = line.split(',').map(value => parseFloat(value));
-  const midPrice = (values[0] + values[3]) / 2;
-  cumulativeTokens += values[4];
-  tmpFileStream.write(JSON.stringify({ price: midPrice, tokens: cumulativeTokens }) + '\n');
-});
+// Example usage
+const startPrice = 0.0000000042;
+const endPrice = 0.000000069;
+const totalTokens = 1000000000; // 1 billion tokens
+const numOrders = 25;
+const depthChart = generateDepthChart(startPrice, endPrice, totalTokens, numOrders);
 
-rl.on('close', async () => {
-  tmpFileStream.end(); // Close the temporary file stream
+// Output the depth chart data
+const outputPath = path.resolve(__dirname, 'depthChart.json');
+fs.writeFileSync(outputPath, JSON.stringify(depthChart, null, 2));
 
-  // Read the temporary file and prepare data for the chart
-  const prices: number[] = [];
-  const tokens: number[] = [];
-
-  const tmpFileReadStream = readline.createInterface({
-    input: fs.createReadStream(tmpFilePath),
-    output: process.stdout,
-    terminal: false
-  });
-
-  tmpFileReadStream.on('line', (line) => {
-    const data = JSON.parse(line);
-    prices.push(data.price);
-    tokens.push(data.tokens);
-  });
-
-  tmpFileReadStream.on('close', async () => {
-    // Generate the depth chart after reading the entire temporary file
-    const width = 800; // Width of the chart in pixels
-    const height = 600; // Height of the chart in pixels
-    const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
-
-    const configuration: ChartConfiguration<'line'> = {
-      type: 'line',
-      data: {
-        labels: prices,
-        datasets: [{
-          label: 'Tokens for Sale',
-          data: tokens,
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1,
-          fill: false
-        }]
-      },
-      options: {
-        scales: {
-          x: {
-            type: 'linear',
-            title: {
-              display: true,
-              text: 'Price (WETH)'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Tokens for Sale'
-            }
-          }
-        }
-      }
-    };
-
-    try {
-      // Generate a unique filename using a timestamp
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const imagePath = path.join(__dirname, `depth_chart_${timestamp}.png`);
-
-      const imageBuffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-      fs.writeFileSync(imagePath, imageBuffer);
-      console.log(`Depth chart has been generated: ${imagePath}`);
-    } catch (error) {
-      console.error('Error generating depth chart:', error);
-    } finally {
-      // Clean up the temporary file
-      fs.unlinkSync(tmpFilePath);
-    }
-  });
-});
+console.log(`Depth chart JSON file has been generated at ${outputPath}`);
